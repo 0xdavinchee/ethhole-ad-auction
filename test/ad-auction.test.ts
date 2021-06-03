@@ -34,6 +34,9 @@ describe("AdvertisementAuction", () => {
     it("Should be empty on init", async () => {
       const { AdvertisementAuction } = await setup();
       expect(await AdvertisementAuction.advertText()).to.equal("");
+      expect(await AdvertisementAuction.lastBidder()).to.equal(
+        ethers.constants.AddressZero
+      );
       expect(await AdvertisementAuction.advertImageUrlText()).to.equal("");
       expect(await AdvertisementAuction.lastBid()).to.equal(0);
     });
@@ -49,18 +52,18 @@ describe("AdvertisementAuction", () => {
 
     it("Should allow user to update text", async () => {
       const { AdvertisementAuction, deployer } = await setup();
-      await expect(
-        AdvertisementAuction.setTexts("squanch", SQUANCH_IMAGE_URL, {
-          value: ethers.utils.parseEther("0.01"),
-        })
-      )
-        .to.emit(AdvertisementAuction, "CreateAdvertisement")
-        .withArgs(
-          deployer.address,
-          "squanch",
-          SQUANCH_IMAGE_URL,
-          ethers.utils.parseEther("0.01")
-        );
+      await AdvertisementAuction.setTexts("squanch", SQUANCH_IMAGE_URL, {
+        value: ethers.utils.parseEther("0.01"),
+      });
+      expect(await AdvertisementAuction.lastBidder()).to.equal(
+        deployer.address
+      );
+      expect(await AdvertisementAuction.lastBid()).to.equal(
+        ethers.utils.parseEther("0.01")
+      );
+      expect(await AdvertisementAuction.advertImageUrlText()).to.equal(
+        SQUANCH_IMAGE_URL
+      );
     });
 
     it("Should allow user to outbid and update text", async () => {
@@ -68,22 +71,23 @@ describe("AdvertisementAuction", () => {
       await AdvertisementAuction.setTexts("squanch", SQUANCH_IMAGE_URL, {
         value: ethers.utils.parseEther("0.01"),
       });
-      await expect(
-        participants[0].AdvertisementAuction.setTexts(
-          "squinch",
-          SQUANCH_IMAGE_URL,
-          {
-            value: ethers.utils.parseEther("0.02"),
-          }
-        )
-      )
-        .to.emit(AdvertisementAuction, "CreateAdvertisement")
-        .withArgs(
-          participants[0].address,
-          "squinch",
-          SQUANCH_IMAGE_URL,
-          ethers.utils.parseEther("0.02")
-        );
+      await participants[0].AdvertisementAuction.setTexts(
+        "squinch",
+        SQUANCH_IMAGE_URL,
+        {
+          value: ethers.utils.parseEther("0.02"),
+        }
+      );
+
+      expect(await AdvertisementAuction.lastBidder()).to.equal(
+        participants[0].address
+      );
+      expect(await AdvertisementAuction.lastBid()).to.equal(
+        ethers.utils.parseEther("0.02")
+      );
+      expect(await AdvertisementAuction.advertImageUrlText()).to.equal(
+        SQUANCH_IMAGE_URL
+      );
     });
 
     it("Should not allow user to update with equal or lower bid.", async () => {

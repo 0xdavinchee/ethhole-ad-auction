@@ -24,8 +24,16 @@ task("accounts", "Prints the list of accounts", async (_args, hre) => {
 const config: HardhatUserConfig = {
   solidity: "0.7.3",
   namedAccounts: {
-    deployer: 0
-  }
+    deployer: 0,
+  },
+  networks: {
+    hardhat: {
+      chainId: 1337,
+    },
+  },
+  paths: {
+    artifacts: "./frontend/src/artifacts",
+  },
 };
 
 export default config;

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/vincent/Documents/solidity/ethhole-ad-auction/contracts/AdvertisementAuction.sol": {
-      "lastModificationDate": 1622707189078,
-      "contentHash": "87c46cae3916cf11cb6be835de5f1ba7",
+      "lastModificationDate": 1622714602152,
+      "contentHash": "b23d0d8d7d744b012daa7080d699a865",
       "sourceName": "contracts/AdvertisementAuction.sol",
       "solcConfig": {
         "version": "0.7.3",

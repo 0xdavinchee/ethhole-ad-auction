@@ -7,14 +7,18 @@ contract AdvertisementAuction {
     address private owner;
     string public advertText;
     string public advertImageUrlText;
+    address public lastBidder;
     uint256 public lastBid;
     uint256 public lastBidAt;
+    uint256 public id;
 
     event CreateAdvertisement(
+        uint256 indexed id,
         address indexed creator,
         string text,
         string urlText,
-        uint256 bidAmount
+        uint256 bidAmount,
+        uint256 lastBidAt
     );
 
     event Withdrawal(uint256 amount);
@@ -37,12 +41,16 @@ contract AdvertisementAuction {
         advertText = _advertText;
         advertImageUrlText = _advertImageUrlText;
         lastBidAt = block.timestamp;
+        lastBidder = msg.sender;
+        id = id + 1;
 
         emit CreateAdvertisement(
+            id,
             msg.sender,
             _advertText,
             _advertImageUrlText,
-            msg.value
+            msg.value,
+            block.timestamp
         );
     }
 
